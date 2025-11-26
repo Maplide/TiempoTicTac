@@ -2,27 +2,29 @@ using UnityEngine;
 
 public class PressurePlate : MonoBehaviour
 {
+    [Header("Estado visual")]
+    public Sprite inactiveSprite;   // rojo
+    public Sprite activeSprite;     // verde
+
     [Header("Referencia a puerta")]
-    public PuzzleDoor linkedDoor;
+    public SpriteDoor linkedDoor;
 
     [Header("Detección")]
-    public string requiredTag = "RecordableBox"; // tag del objeto que debe presionar
+    public string requiredTag = "RecordableBox";
 
     int objectsOnPlate;
     SpriteRenderer sr;
-    Color defaultColor;
-    public Color activeColor = Color.green;
 
     void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
-        if (sr != null)
-            defaultColor = sr.color;
+        sr.sprite = inactiveSprite;
+        sr.color = Color.white; // importante, para que no se tiña raro
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (requiredTag == "" || other.CompareTag(requiredTag))
+        if (other.CompareTag(requiredTag))
         {
             objectsOnPlate++;
             UpdateState();
@@ -31,7 +33,7 @@ public class PressurePlate : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (requiredTag == "" || other.CompareTag(requiredTag))
+        if (other.CompareTag(requiredTag))
         {
             objectsOnPlate = Mathf.Max(0, objectsOnPlate - 1);
             UpdateState();
@@ -42,6 +44,8 @@ public class PressurePlate : MonoBehaviour
     {
         bool isActive = objectsOnPlate > 0;
 
+        sr.sprite = isActive ? activeSprite : inactiveSprite;
+
         if (linkedDoor != null)
         {
             if (isActive)
@@ -49,8 +53,5 @@ public class PressurePlate : MonoBehaviour
             else
                 linkedDoor.CloseDoor();
         }
-
-        if (sr != null)
-            sr.color = isActive ? activeColor : defaultColor;
     }
 }

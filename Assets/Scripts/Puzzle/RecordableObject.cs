@@ -12,7 +12,12 @@ public class RecordableObject : MonoBehaviour
     }
 
     [Header("Grabación")]
-    public float recordInterval = 0.02f; // cada cuánto se guarda un frame (~50 fps)
+    public float recordInterval = 0.02f;
+
+    [Header("Opciones de física")]
+    [Tooltip("Solo marcar en objetos dinámicos como cajas. " +
+             "NO marcar en plataformas que deben ser siempre kinematic.")]
+    public bool controlKinematic = true;
 
     List<RecordedState> recordedStates = new List<RecordedState>();
     bool isRecording;
@@ -75,9 +80,10 @@ public class RecordableObject : MonoBehaviour
         isReplaying = false;
         recordTimer = 0f;
 
-        if (rb != null)
+        // SOLO cajas dinámicas
+        if (rb != null && controlKinematic && rb.bodyType == RigidbodyType2D.Dynamic)
         {
-            rb.isKinematic = false;  // dejar que la física actúe mientras grabas
+            rb.isKinematic = false;
         }
     }
 
@@ -95,9 +101,10 @@ public class RecordableObject : MonoBehaviour
         isReplaying = true;
         replayIndex = 0;
 
-        if (rb != null)
+        // SOLO cajas dinámicas
+        if (rb != null && controlKinematic && rb.bodyType == RigidbodyType2D.Dynamic)
         {
-            rb.isKinematic = true;  // congelamos la física para seguir la grabación
+            rb.isKinematic = true;
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
         }
@@ -107,9 +114,10 @@ public class RecordableObject : MonoBehaviour
     {
         isReplaying = false;
 
-        if (rb != null)
+        // SOLO cajas dinámicas
+        if (rb != null && controlKinematic && rb.bodyType == RigidbodyType2D.Dynamic)
         {
-            rb.isKinematic = false;  // vuelve a la física normal
+            rb.isKinematic = false;
         }
     }
 }

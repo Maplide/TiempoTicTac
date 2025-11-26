@@ -1,22 +1,19 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class PlayerController2D : MonoBehaviour
 {
     [Header("Movimiento")]
     public float moveSpeed = 5f;
     public float jumpForce = 7f;
 
-    [Header("Ground Check")]
-    public Transform groundCheck;
-    public float groundCheckRadius = 0.1f;
-    public LayerMask groundLayer;
+    [Header("Ground")]
+    public LayerMask groundLayer;  // asignaremos la capa Ground
 
     Rigidbody2D rb;
     float horizontalInput;
     bool isGrounded;
     bool jumpRequest;
-    bool hasJumped;   // evita múltiples saltos seguidos en el aire
 
     void Awake()
     {
@@ -25,70 +22,63 @@ public class PlayerController2D : MonoBehaviour
 
     void Update()
     {
-        // --- Movimiento horizontal (teclado) ---
+        // input horizontal
         horizontalInput = Input.GetAxisRaw("Horizontal");
 
-        // Actualizar estado de suelo
-        UpdateGrounded();
-
-        // Salto: solo permitimos pedir salto si está en el suelo y aún no hemos saltado
-        if (Input.GetButtonDown("Jump"))
+        // salto por teclado
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            if (isGrounded && !hasJumped)
-            {
-                jumpRequest = true;
-            }
+            jumpRequest = true;
         }
-
-        // (Más adelante aquí conectamos input móvil)
     }
 
     void FixedUpdate()
     {
-        // Movimiento horizontal
-        Vector2 velocity = rb.linearVelocity;
-        velocity.x = horizontalInput * moveSpeed;
-        rb.linearVelocity = velocity;
+        // movimiento horizontal
+        Vector2 v = rb.linearVelocity;
+        v.x = horizontalInput * moveSpeed;
+        rb.linearVelocity = v;
 
-        // Salto
-        if (jumpRequest)
+        // salto
+        if (jumpRequest && isGrounded)
         {
             jumpRequest = false;
-            hasJumped = true; // ya saltamos, bloquear hasta tocar suelo
-
-            // resetear velocidad vertical para que el salto sea consistente
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
+        else
+        {
+            jumpRequest = false;
+        }
     }
 
-    void UpdateGrounded()
+    // Detectamos si está tocando suelo por colisiones
+    void OnCollisionStay2D(Collision2D collision)
     {
-        if (groundCheck == null)
+        // Revisamos si el otro está en la capa Ground
+        if (((1 << collision.gameObject.layer) & groundLayer) != 0)
+        {
+            // Miramos los contactos: si alguno viene desde abajo (normal.y > 0.5) lo tomamos como suelo
+            foreach (var contact in collision.contacts)
+            {
+                if (contact.normal.y > 0.5f)
+                {
+                    isGrounded = true;
+                    return;
+                }
+            }
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (((1 << collision.gameObject.layer) & groundLayer) != 0)
         {
             isGrounded = false;
-            return;
         }
-
-        Collider2D hit = Physics2D.OverlapCircle(
-            groundCheck.position,
-            groundCheckRadius,
-            groundLayer
-        );
-
-        // solo consideramos grounded si tocamos suelo y estamos bajando o casi quietos
-        bool groundedNow = (hit != null) && rb.linearVelocity.y <= 0.05f;
-
-        // si acabamos de tocar el suelo, reseteamos hasJumped
-        if (groundedNow && !isGrounded)
-        {
-            hasJumped = false;
-        }
-
-        isGrounded = groundedNow;
     }
 
-    // Para móvil, estos siguen igual:
+    // Para botones móviles
     public void SetHorizontalInput(float value)
     {
         horizontalInput = value;
@@ -96,18 +86,7 @@ public class PlayerController2D : MonoBehaviour
 
     public void Jump()
     {
-        if (isGrounded && !hasJumped)
-        {
+        if (isGrounded)
             jumpRequest = true;
-        }
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        if (groundCheck != null)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
-        }
     }
 }
