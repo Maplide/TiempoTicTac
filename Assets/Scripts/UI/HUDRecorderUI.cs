@@ -1,31 +1,65 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class HUDRecorderUI : MonoBehaviour
 {
-    [Header("Referencias")]
-    public PuzzleRecorderManager recorder;
-    public GameObject recIconGroup;        
-    public TMP_Text instructionsText;
+    [Header("Lógica")]
+    public RecorderSelector recorderSelector;
+
+    [Header("Iconos")]
+    public Image recIcon;
+    public Image playIcon;
+
+    [Header("Textos")]
+    public TMP_Text selectedObjectText;
+    public TMP_Text helpText;
+
+    [Header("Colores")]
+    public Color idleColor = Color.white;
+    public Color recActiveColor = Color.red;
+    public Color replayActiveColor = Color.green;
+
+    void Start()
+    {
+        if (helpText != null)
+        {
+            helpText.text = "Q/E: cambiar objeto | R: grabar/stop | T: reproducir/stop";
+        }
+
+        // Inicializamos íconos en color idle
+        if (recIcon != null) recIcon.color = idleColor;
+        if (playIcon != null) playIcon.color = idleColor;
+    }
 
     void Update()
     {
-        if (recorder == null)
+        if (recorderSelector == null)
             return;
 
-        bool recording = recorder.IsRecording;
+        var current = recorderSelector.Current;
 
-        if (recIconGroup != null)
+        // Texto del objeto seleccionado
+        if (selectedObjectText != null)
         {
-            recIconGroup.SetActive(recording);
+            selectedObjectText.text = current != null
+                ? "Objeto: " + current.gameObject.name
+                : "Objeto: ninguno";
         }
 
-        if (instructionsText != null)
+        bool isRec = (current != null && current.IsRecording);
+        bool isRep = (current != null && current.IsReplaying);
+
+        // Colores de REC
+        if (recIcon != null)
         {
-            if (recording)
-                instructionsText.text = "Grabando... pulsa T para reproducir";
-            else
-                instructionsText.text = "Pulsa R para grabar, T para reproducir";
+            recIcon.color = isRec ? recActiveColor : idleColor;
+        }
+
+        // Colores de PLAY
+        if (playIcon != null)
+        {
+            playIcon.color = isRep ? replayActiveColor : idleColor;
         }
     }
 }

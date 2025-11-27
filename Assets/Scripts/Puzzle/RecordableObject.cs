@@ -19,6 +19,12 @@ public class RecordableObject : MonoBehaviour
              "NO marcar en plataformas que deben ser siempre kinematic.")]
     public bool controlKinematic = true;
 
+    [Header("Selección visual")]
+    [Tooltip("SpriteRenderer usado SOLO para el contorno/halo de selección. " +
+             "Debe ser un hijo del objeto. Si se deja vacío, no se mostrará selección.")]
+    public SpriteRenderer selectionRenderer;
+
+    // Estados internos
     List<RecordedState> recordedStates = new List<RecordedState>();
     bool isRecording;
     bool isReplaying;
@@ -27,9 +33,19 @@ public class RecordableObject : MonoBehaviour
 
     Rigidbody2D rb;
 
+    // Exponer estados para RecorderSelector
+    public bool IsRecording => isRecording;
+    public bool IsReplaying => isReplaying;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        // Si se asigna un halo de selección, se apaga al inicio
+        if (selectionRenderer != null)
+        {
+            selectionRenderer.enabled = false;
+        }
     }
 
     void Update()
@@ -80,7 +96,7 @@ public class RecordableObject : MonoBehaviour
         isReplaying = false;
         recordTimer = 0f;
 
-        // SOLO cajas dinámicas
+        // SOLO cajas dinámicas vuelven a modo físico
         if (rb != null && controlKinematic && rb.bodyType == RigidbodyType2D.Dynamic)
         {
             rb.isKinematic = false;
@@ -101,7 +117,7 @@ public class RecordableObject : MonoBehaviour
         isReplaying = true;
         replayIndex = 0;
 
-        // SOLO cajas dinámicas
+        // SOLO cajas dinámicas pasan a kinematic durante replay
         if (rb != null && controlKinematic && rb.bodyType == RigidbodyType2D.Dynamic)
         {
             rb.isKinematic = true;
@@ -114,10 +130,21 @@ public class RecordableObject : MonoBehaviour
     {
         isReplaying = false;
 
-        // SOLO cajas dinámicas
+        // SOLO cajas dinámicas recuperan dinámica normal
         if (rb != null && controlKinematic && rb.bodyType == RigidbodyType2D.Dynamic)
         {
             rb.isKinematic = false;
         }
+    }
+
+    // =========================
+    //      SELECCIÓN VISUAL
+    // =========================
+    public void SetSelected(bool selected)
+    {
+        if (selectionRenderer == null)
+            return;
+
+        selectionRenderer.enabled = selected;
     }
 }
