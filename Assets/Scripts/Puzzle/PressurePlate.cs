@@ -13,6 +13,7 @@ public class PressurePlate : MonoBehaviour
     public string requiredTag = "RecordableBox";
 
     int objectsOnPlate;
+    bool lastActive;
     SpriteRenderer sr;
 
     void Awake()
@@ -20,6 +21,7 @@ public class PressurePlate : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         sr.sprite = inactiveSprite;
         sr.color = Color.white; // importante, para que no se tiña raro
+        lastActive = false;
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -45,6 +47,17 @@ public class PressurePlate : MonoBehaviour
         bool isActive = objectsOnPlate > 0;
 
         sr.sprite = isActive ? activeSprite : inactiveSprite;
+
+        // AUDIO: activar/desactivar plataforma
+        if (GameAudioManager.Instance != null && isActive != lastActive)
+        {
+            if (isActive)
+                GameAudioManager.Instance.PlayPlatformOn();
+            else
+                GameAudioManager.Instance.PlayPlatformOff();
+        }
+
+        lastActive = isActive;
 
         if (linkedDoor != null)
         {

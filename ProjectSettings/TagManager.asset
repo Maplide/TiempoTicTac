@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - RecordableBox
+  - FallZone
   layers:
   - Default
   - TransparentFX

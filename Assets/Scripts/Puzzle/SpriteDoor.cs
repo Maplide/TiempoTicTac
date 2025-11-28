@@ -23,6 +23,12 @@ public class SpriteDoor : MonoBehaviour
     {
         isOpen = true;
         UpdateVisual();
+
+        // AUDIO: puerta se abre
+        if (GameAudioManager.Instance != null)
+        {
+            GameAudioManager.Instance.PlayDoorOpen();
+        }
     }
 
     public void CloseDoor()

@@ -99,7 +99,7 @@ public class RecordableObject : MonoBehaviour
         // SOLO cajas dinámicas vuelven a modo físico
         if (rb != null && controlKinematic && rb.bodyType == RigidbodyType2D.Dynamic)
         {
-            rb.isKinematic = false;
+            rb.bodyType = RigidbodyType2D.Dynamic; // Asegurar modo dinámico real
         }
     }
 
@@ -120,7 +120,7 @@ public class RecordableObject : MonoBehaviour
         // SOLO cajas dinámicas pasan a kinematic durante replay
         if (rb != null && controlKinematic && rb.bodyType == RigidbodyType2D.Dynamic)
         {
-            rb.isKinematic = true;
+            rb.bodyType = RigidbodyType2D.Kinematic;
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
         }
@@ -133,7 +133,7 @@ public class RecordableObject : MonoBehaviour
         // SOLO cajas dinámicas recuperan dinámica normal
         if (rb != null && controlKinematic && rb.bodyType == RigidbodyType2D.Dynamic)
         {
-            rb.isKinematic = false;
+            rb.bodyType = RigidbodyType2D.Dynamic;
         }
     }
 
