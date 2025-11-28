@@ -9,7 +9,7 @@ public class PremiumStore : MonoBehaviour
 
     private const string PREMIUM_KEY = "PremiumUnlocked";
 
-    void Start()
+    public void Start()
     {
         if (buyButton != null)
             buyButton.onClick.AddListener(BuyPremium);

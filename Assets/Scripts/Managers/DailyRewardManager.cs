@@ -14,7 +14,7 @@ public class DailyRewardManager : MonoBehaviour
 
     private const string LAST_REWARD_KEY = "LastRewardDate";
 
-    void Start()
+    public void Start()
     {
         if (rewardMessage != null)
         {
