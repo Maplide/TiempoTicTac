@@ -1,3 +1,5 @@
+#if UNITY_INCLUDE_TESTS   // <--- IMPORTANTE
+
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,10 +9,9 @@ public class CoreEditModeTests
     [Test]
     public void PlayerController_HasPositiveMoveAndJump()
     {
-        // Creamos un objeto con los componentes requeridos
         var go = new GameObject("PlayerTest");
-        go.AddComponent<BoxCollider2D>();     // Collider requerido
-        go.AddComponent<Rigidbody2D>();       // Rigidbody2D requerido
+        go.AddComponent<BoxCollider2D>();
+        go.AddComponent<Rigidbody2D>();
 
         var player = go.AddComponent<PlayerController2D>();
 
@@ -31,7 +32,6 @@ public class CoreEditModeTests
         var button = buttonGO.AddComponent<Button>();
         mgr.rewardButton = button;
 
-        // Llamamos Start (ahora es public)
         mgr.Start();
 
         Assert.IsTrue(button.gameObject.activeSelf,
@@ -56,18 +56,16 @@ public class CoreEditModeTests
         store.buyButton = buyButton;
         store.premiumContentButton = premiumButton;
 
-        // Inicializa UI y listener
         store.Start();
-
-        // Simulamos clic en comprar
         buyButton.onClick.Invoke();
 
         int premiumValue = PlayerPrefs.GetInt(PREMIUM_KEY, 0);
         Assert.AreEqual(1, premiumValue, "PremiumUnlocked debe quedar en 1.");
-
         Assert.IsFalse(buyButton.gameObject.activeSelf,
             "El botón de comprar debe ocultarse tras la compra.");
         Assert.IsTrue(premiumButton.gameObject.activeSelf,
             "El botón de contenido premium debe mostrarse tras la compra.");
     }
 }
+
+#endif  // UNITY_INCLUDE_TESTS

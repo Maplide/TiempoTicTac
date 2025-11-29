@@ -1,3 +1,5 @@
+#if UNITY_INCLUDE_TESTS   // <--- IMPORTANTE
+
 using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
@@ -49,3 +51,5 @@ public class RecordableObjectPlayModeTests
         Assert.LessOrEqual(diff, 0.2f);
     }
 }
+
+#endif  // UNITY_INCLUDE_TESTS

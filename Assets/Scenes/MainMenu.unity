@@ -507,11 +507,11 @@ RectTransform:
   - {fileID: 1669305088}
   - {fileID: 1612720724}
   - {fileID: 1204638360}
-  - {fileID: 1442270017}
   - {fileID: 1042121322}
   - {fileID: 1265704597}
   - {fileID: 1985125991}
   - {fileID: 926828370}
+  - {fileID: 1442270017}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1545,8 +1545,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -262, y: -283}
-  m_SizeDelta: {x: 1055.3, y: 263.82}
+  m_AnchoredPosition: {x: -499, y: -283}
+  m_SizeDelta: {x: 504.958, y: 263.82}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &926828371
 MonoBehaviour:
@@ -1633,7 +1633,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 496.54898, w: 0}
+  m_margin: {x: 0, y: 0, z: 2.8139343, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1792,7 +1792,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1073707201}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03920ca8c3f975143bd221cee2dfe08f, type: 3}
   m_Name: 
@@ -2613,7 +2613,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1998778527}
-        m_TargetAssemblyTypeName: MainMenuUI, Assembly-CSharp
+        m_TargetAssemblyTypeName: MainMenuUI, Main
         m_MethodName: ExitGame
         m_Mode: 1
         m_Arguments:
@@ -2747,7 +2747,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1998778527}
-        m_TargetAssemblyTypeName: MainMenuUI, Assembly-CSharp
+        m_TargetAssemblyTypeName: MainMenuUI, Main
         m_MethodName: OpenCredits
         m_Mode: 1
         m_Arguments:

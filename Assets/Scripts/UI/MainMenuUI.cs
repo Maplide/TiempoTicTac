@@ -3,7 +3,15 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuUI : MonoBehaviour
 {
-    public GameObject controlsPanel;
+    [Header("Panels")]
+    public GameObject controlsPanel;   // Panel con los controles (debe tener el botón Cerrar)
+
+    void Start()
+    {
+        // Nos aseguramos que al inicio el panel esté oculto
+        if (controlsPanel != null)
+            controlsPanel.SetActive(false);
+    }
 
     public void PlayGame()
     {
